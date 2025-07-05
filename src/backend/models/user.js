@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 6 // minimum password length
+    },
+    status: {
+        type: String,
+        enum: ['online', 'offline', 'away'],
+        default: 'offline' // default status
     }
 });
 

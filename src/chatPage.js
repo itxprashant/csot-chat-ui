@@ -30,6 +30,17 @@ export const ChatPage = () => {
     fetchAllUsers();
   }, [navigate]);
 
+  // Periodically refresh user status
+  useEffect(() => {
+    if (!currentUser) return;
+    
+    const interval = setInterval(() => {
+      fetchAllUsers();
+    }, 10000); // Refresh every 10 seconds
+    
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
   const fetchAllUsers = async () => {
     try {
       // const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
@@ -48,12 +59,28 @@ export const ChatPage = () => {
     }
   };
 
+  const getUserStatus = (email) => {
+    const user = allUsers.find(u => u.email === email);
+    return user?.status || 'offline';
+  };
+
   const handleUserSelect = (user) => {
     setSelectedUser(user);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
+    const username = currentUser.email;
+
+    // Set user status to online
+    fetch(`http://localhost:8000/api/users/status`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*', // Allow CORS for all origins
+          },
+          body: JSON.stringify({ email: username, status: 'offline' }),
+        });
     navigate('/');
   };
 
@@ -93,6 +120,10 @@ export const ChatPage = () => {
                   <span className="user-name">{user.name || user.email.split('@')[0]}</span>
                   <span className="user-email">{user.email}</span>
                 </div>
+                <div className={`user-status ${user.status || 'offline'}`}>
+                  <span className="status-indicator"></span>
+                  <span className="status-text">{user.status || 'offline'}</span>
+                </div>
               </div>
             ))}
         </div>
@@ -116,9 +147,15 @@ export const ChatPage = () => {
                   <span className="chat-name">{chat.otherUserName || chat.otherUserEmail.split('@')[0]}</span>
                   <span className="chat-last-message">{chat.lastMessage}</span>
                 </div>
-                {chat.unreadCount > 0 && (
-                  <span className="unread-count">{chat.unreadCount}</span>
-                )}
+                <div className="chat-status-container">
+                  <div className={`user-status ${getUserStatus(chat.otherUserEmail)}`}>
+                    <span className="status-indicator"></span>
+                    <span className="status-text">{getUserStatus(chat.otherUserEmail)}</span>
+                  </div>
+                  {chat.unreadCount > 0 && (
+                    <span className="unread-count">{chat.unreadCount}</span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

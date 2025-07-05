@@ -41,8 +41,20 @@ function LoginPage() {
         localStorage.setItem('currentUser', JSON.stringify({
           email: username,
           name: data.name || username.split('@')[0], // Use name from response or email prefix
-          id: data.id || username
+          id: data.id || username,
+          status: 'online'
         }));
+
+        // Set user status to online
+        fetch(`http://localhost:8000/api/users/status`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*', // Allow CORS for all origins
+          },
+          body: JSON.stringify({ email: username, status: 'online' }),
+        });
+        
         
         alert('Login successful');
         // Navigate to chat page

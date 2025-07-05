@@ -48,6 +48,11 @@ async function createUser(name, email, password) {
 
 }
 
+// create a new user
+// createUser("kyran", "kyran@gmail.com", "password")
+// createUser("tom", "tom@gmail.com", "password")
+// createUser("john", "john@gmail.com", "password")
+
 async function authenticateUser(email, password) {
     // 0: success, 1: user not found, 2: password mismatch
 
@@ -237,3 +242,28 @@ app.get('/api/debug/db-status', async (req, res) => {
 //     img_url: ""
 // });
 // newChat.save();
+
+// set user status to online or offline
+
+app.post('/api/users/status', (req, res) => {
+    const { email, status } = req.body;
+
+    if (!email || !status) {
+        return res.status(400).send('Email and status are required');
+    }
+
+    User.findOneAndUpdate({ email: email }, { status: status }, { new: true })
+        .then(user => {
+            if (!user) {
+                return res.status(404).send('User not found');
+            }
+            res.status(200).json({ 
+                message: 'Status updated successfully',
+                user: { name: user.name, email: user.email, status: user.status }
+            });
+        })
+        .catch(err => {
+            console.error('Error updating user status:', err);
+            res.status(500).send('Error updating user status');
+        });
+})
