@@ -1,6 +1,7 @@
 .chat-page {
   display: flex;
   height: 100vh;
+  flex-direction: row;;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -200,7 +201,8 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  /* height: 100%; */
+  height: 100vh;
 }
 
 .back-btn {
@@ -213,11 +215,13 @@
   cursor: pointer;
   font-size: 0.9rem;
   align-self: flex-start;
+  display: none; /* Hide by default on desktop */
 }
 
 .back-btn:hover {
   background-color: #5a6268;
 }
+
 
 .no-chat-selected {
   display: flex;
@@ -272,6 +276,10 @@
   
   .chat-main {
     flex: 1;
+  }
+
+  .back-btn {
+    display: block; /* Show back button on mobile */
   }
 
   .user-status .status-text,

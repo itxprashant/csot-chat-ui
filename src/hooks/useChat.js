@@ -66,7 +66,7 @@ export const useChat = (currentUserEmail, targetUserEmail) => {
   }, [chatId]);
 
   // Send message function
-  const sendMessage = useCallback(async (messageText, senderName) => {
+  const sendMessage = useCallback(async (messageText, senderName, messageType = 'text') => {
     if (!chatId || !messageText.trim()) return;
 
     try {
@@ -75,7 +75,8 @@ export const useChat = (currentUserEmail, targetUserEmail) => {
         currentUserEmail,
         targetUserEmail,
         messageText.trim(),
-        senderName
+        senderName,
+        messageType
       );
     } catch (err) {
       setError('Failed to send message');

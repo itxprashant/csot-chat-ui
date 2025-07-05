@@ -18,7 +18,7 @@ import { db } from './config';
 export class ChatService {
   
   // Send a message
-  static async sendMessage(chatId, senderId, receiverId, message, senderName) {
+  static async sendMessage(chatId, senderId, receiverId, message, senderName, messageType = 'text') {
     try {
       const messagesRef = collection(db, 'chats', chatId, 'messages');
       await addDoc(messagesRef, {
@@ -28,13 +28,14 @@ export class ChatService {
         message,
         timestamp: serverTimestamp(),
         status: 'sent',
-        type: 'text'
+        type: messageType
       });
       
       // Update last message in chat metadata
       const chatRef = doc(db, 'chats', chatId);
+      const lastMessageText = messageType === 'photo' ? '📷 Photo' : message;
       await updateDoc(chatRef, {
-        lastMessage: message,
+        lastMessage: lastMessageText,
         lastMessageTime: serverTimestamp(),
         updatedAt: serverTimestamp()
       });

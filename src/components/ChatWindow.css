@@ -2,11 +2,12 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-height: 600px;
+  max-height: 1000px;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   background-color: white;
+  position: relative;
 }
 
 .chat-header {
@@ -47,10 +48,9 @@
 
 .video-call-message {
   background-color: #e3f2fd;
-  padding: 10px;
+  padding: 1rem;
   border-radius: 8px;
   border-left: 4px solid #2196f3;
-  margin: 5px 0;
 }
 
 .video-call-message p {
@@ -63,10 +63,11 @@
   background-color: #2196f3;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s ease;
 }
 
 .join-call-btn:hover {
@@ -152,6 +153,7 @@
 
 .message-input-form {
   display: flex;
+  align-items: center;
   padding: 10px;
   border-top: 1px solid #ddd;
   background-color: white;
@@ -193,4 +195,92 @@
 
 .chat-error {
   color: #dc3545;
+}
+
+/* Drag and drop styles */
+.chat-window.drag-over {
+  border: 2px dashed #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.drag-drop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 123, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+.drag-drop-content {
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px dashed #007bff;
+}
+
+.drag-drop-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #007bff;
+}
+
+.drag-drop-content p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Photo message styles */
+.photo-message {
+  max-width: 300px;
+}
+
+.message-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.message-photo:hover {
+  transform: scale(1.02);
+}
+
+.photo-filename {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0.5rem 0 0 0;
+  text-align: center;
+}
+
+/* Attachment button styles */
+.attachment-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.attachment-button:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.attachment-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
 }

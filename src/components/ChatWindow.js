@@ -8,7 +8,11 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
   const [newMessage, setNewMessage] = useState('');
   const [isVideoCallActive, setIsVideoCallActive] = useState(false);
   const [callRoomName, setCallRoomName] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const chatWindowRef = useRef(null);
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
@@ -32,6 +36,84 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
 
     await sendMessage(newMessage, currentUserName);
     setNewMessage('');
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check if file is an image
+      if (file.type.startsWith('image/')) {
+        handleSendPhoto(file);
+      } else {
+        alert('Please select an image file');
+      }
+    }
+  };
+
+  const handleSendPhoto = async (file) => {
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      // Convert file to base64 for simple storage
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Data = e.target.result;
+        const photoMessage = {
+          type: 'photo',
+          photoData: base64Data,
+          fileName: file.name,
+          fileSize: file.size
+        };
+        
+        await sendMessage(JSON.stringify(photoMessage), currentUserName, 'photo');
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error sending photo:', error);
+      alert('Failed to send photo');
+      setIsUploading(false);
+    }
+  };
+
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set dragOver to false if we're leaving the chat window entirely
+    if (!chatWindowRef.current?.contains(e.relatedTarget)) {
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+
+    if (imageFiles.length === 0) {
+      alert('Please drop only image files');
+      return;
+    }
+
+    // Handle multiple images
+    imageFiles.forEach(file => {
+      handleSendPhoto(file);
+    });
   };
 
   const handleStartVideoCall = async () => {
@@ -93,6 +175,26 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
         </div>
       );
     }
+
+    // Handle photo messages
+    if (message.type === 'photo') {
+      try {
+        const photoData = JSON.parse(message.message);
+        return (
+          <div className="photo-message">
+            <img 
+              src={photoData.photoData} 
+              alt={photoData.fileName}
+              className="message-photo"
+              onClick={() => window.open(photoData.photoData, '_blank')}
+            />
+            <p className="photo-filename">{photoData.fileName}</p>
+          </div>
+        );
+      } catch (error) {
+        return <p>Error loading photo</p>;
+      }
+    }
     
     return <p>{message.message}</p>;
   };
@@ -107,7 +209,13 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
 
   return (
     <>
-      <div className="chat-window">
+      <div 
+        className={`chat-window ${isDragOver ? 'drag-over' : ''}`}
+        ref={chatWindowRef}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <div className="chat-header">
           <h3>Chat with {targetUserName}</h3>
           <button 
@@ -154,7 +262,32 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
           <button type="submit" className="send-button">
             Send
           </button>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+          />
+          <button 
+            type="button" 
+            className="attachment-button"
+            onClick={handleAttachmentClick}
+            disabled={isUploading}
+          >
+            {isUploading ? 'Uploading...' : '📎 Attach Photo'}
+          </button>
         </form>
+
+        {/* Drag and drop overlay */}
+        {isDragOver && (
+          <div className="drag-drop-overlay">
+            <div className="drag-drop-content">
+              <div className="drag-drop-icon">📷</div>
+              <p>Drop images here to send</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <VideoCall
