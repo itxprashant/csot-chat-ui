@@ -1,0 +1,198 @@
+.chat-page {
+  display: flex;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.chat-sidebar {
+  width: 300px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.chat-header {
+  padding: 1rem;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.9rem;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+}
+
+.user-list, .recent-chats {
+  padding: 1rem;
+}
+
+.user-list h3, .recent-chats h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.user-item, .chat-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.user-item:hover, .chat-item:hover {
+  background-color: #e9ecef;
+}
+
+.user-item.selected, .chat-item.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.user-avatar, .chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #6c757d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 0.75rem;
+}
+
+.user-item.selected .user-avatar,
+.chat-item.selected .chat-avatar {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.user-details, .chat-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name, .chat-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.user-email, .chat-last-message {
+  font-size: 0.8rem;
+  color: #6c757d;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-item.selected .user-email,
+.chat-item.selected .chat-last-message {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.unread-count {
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.back-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  align-self: flex-start;
+}
+
+.back-btn:hover {
+  background-color: #5a6268;
+}
+
+.no-chat-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+  text-align: center;
+}
+
+.no-chat-selected h3 {
+  margin-bottom: 0.5rem;
+}
+
+.no-chat-selected p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chat-page {
+    flex-direction: column;
+  }
+  
+  .chat-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+  }
+  
+  .chat-main {
+    flex: 1;
+  }
+}
