@@ -11,9 +11,11 @@ const { User } = require('./models/user');
 
 const saltRounds = 10;
 
-// Use environment variable for MongoDB connection or fallback to local
-// const mongoUrl = process.env.MONGODB_URI || 'mongodb://localhost:27017/mydatabase';
-const mongoUrl = 'mongodb://localhost:27017/mydatabase'; // Change this to your MongoDB URI
+// Use environment variable for MongoDB connection or fallback to MongoDB Atlas
+const uri = "mongodb+srv://prashantt492:GuqFE9OgmZiwjO3S@cluster0.akh0s1t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoUrl = process.env.MONGODB_URI || uri;
+
+// const mongoUrl = 'mongodb://localhost:27017/mydatabase'; // Change this to your MongoDB URI
 
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
