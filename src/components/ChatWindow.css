@@ -24,6 +24,30 @@
   color: #333;
 }
 
+.chat-header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.translation-settings-btn {
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.translation-settings-btn:hover {
+  background-color: #138496;
+}
+
 .video-call-btn {
   background-color: #28a745;
   color: white;
@@ -283,4 +307,67 @@
 .attachment-button:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
+}
+
+/* Translation-related message styles */
+.message-text-content {
+  width: 100%;
+}
+
+.auto-translation {
+  margin-bottom: 8px;
+}
+
+.original-text-small {
+  font-size: 0.85em;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.original-text-small strong {
+  font-size: 0.75em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.translated-text-main {
+  font-weight: 500;
+  padding: 6px 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.original-message-dimmed {
+  opacity: 0.6;
+  font-size: 0.9em;
+  margin-top: 8px;
+}
+
+/* Adjustments for received messages */
+.message.received .translated-text-main {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-left-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .chat-header-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .translation-settings-btn,
+  .video-call-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .auto-translation {
+    margin-bottom: 6px;
+  }
+  
+  .translated-text-main {
+    padding: 4px 6px;
+  }
 }

@@ -33,6 +33,7 @@
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.9rem;
+  gap: 0.25rem;
 }
 
 .logout-btn {
@@ -48,6 +49,29 @@
 
 .logout-btn:hover {
   background-color: #c82333;
+}
+
+.translation-toggle-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s ease;
+}
+
+.translation-toggle-btn:hover {
+  background-color: #5a6268;
+}
+
+.translation-toggle-btn.active {
+  background-color: #28a745;
+}
+
+.translation-toggle-btn.active:hover {
+  background-color: #218838;
 }
 
 .user-list, .recent-chats {

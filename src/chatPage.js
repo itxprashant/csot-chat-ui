@@ -10,6 +10,7 @@ export const ChatPage = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
+  const [translationEnabled, setTranslationEnabled] = useState(false);
   const { chats, loading: chatsLoading } = useChatList(currentUser?.email);
 
   // Check if user is logged in
@@ -22,6 +23,10 @@ export const ChatPage = () => {
     
     const user = JSON.parse(userData);
     setCurrentUser(user);
+    
+    // Load translation preference
+    const translationPref = localStorage.getItem('translationEnabled');
+    setTranslationEnabled(translationPref === 'true');
     
     // Test Firebase connection
     testFirebaseConnection();
@@ -88,6 +93,12 @@ export const ChatPage = () => {
     setSelectedUser(null);
   };
 
+  const handleTranslationToggle = () => {
+    const newState = !translationEnabled;
+    setTranslationEnabled(newState);
+    localStorage.setItem('translationEnabled', newState.toString());
+  };
+
   if (!currentUser) {
     return <div>Loading...</div>;
   }
@@ -99,6 +110,13 @@ export const ChatPage = () => {
           <h2>Chat App</h2>
           <div className="user-info">
             <span>Welcome, {currentUser.name}</span>
+            <button 
+              onClick={handleTranslationToggle}
+              className={`translation-toggle-btn ${translationEnabled ? 'active' : ''}`}
+              title={translationEnabled ? 'Disable Translation' : 'Enable Translation'}
+            >
+              🌐 {translationEnabled ? 'ON' : 'OFF'}
+            </button>
             <button onClick={handleLogout} className="logout-btn">Logout</button>
           </div>
         </div>
@@ -171,6 +189,7 @@ export const ChatPage = () => {
               targetUserEmail={selectedUser.email}
               currentUserName={currentUser.name}
               targetUserName={selectedUser.name || selectedUser.email.split('@')[0]}
+              translationEnabled={translationEnabled}
             />
           </div>
         ) : (

@@ -7,124 +7,46 @@ const VideoCall = ({ roomName, displayName, onCallEnd, isCallActive }) => {
 
   useEffect(() => {
     if (isCallActive && jitsiContainerRef.current && roomName) {
-      // Jitsi Meet API configuration
+      // Jitsi Meet API configuration - try meet.jit.si first, with fallback options
       const domain = 'meet.jit.si';
       
-      // Create a unique room name with timestamp to ensure we're creating a new room
-      const uniqueRoomName = `${roomName}_${Date.now()}`;
+      // Create a unique room name with timestamp and random suffix to avoid auth requirements
+      const uniqueRoomName = `guest_${roomName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
       const options = {
         roomName: uniqueRoomName,
         width: '100%',
         height: '100%',
         parentNode: jitsiContainerRef.current,
-        // configOverwrite: {
-        //   // Critical: Disable all authentication and enable auto-hosting
-        //   prejoinPageEnabled: false,
-        //   requireDisplayName: false,
-        //   enableAuthenticationUI: false,
-        //   enableGuestDomain: true,
+        configOverwrite: {
+          // Disable pre-join page completely
+          prejoinPageEnabled: false,
           
-        //   // Host/Moderator settings - KEY FIX
-        //   enableUserRolesBasedOnToken: false,
-        //   enableFeaturesBasedOnToken: false,
-        //   doNotStoreRoom: true,
+          // Disable authentication requirements
+          requireDisplayName: false,
           
-        //   // Make first user automatically moderator/host
-        //   enableAutoLogin: true,
-        //   disableModeratorIndicator: false,
+          // Disable lobby/waiting room
+          enableLobbyChat: false,
+          lobbyModeEnabled: false,
           
-        //   // Lobby settings - disable completely
-        //   enableLobbyChat: false,
-        //   enableLobbyPrompt: false,
-        //   enableInsecureRoomNameWarning: false,
+          // Basic audio/video settings
+          startAudioOnly: false,
+          startWithAudioMuted: true,
+          startWithVideoMuted: false,
           
-        //   // Critical: Disable lobby entirely so no waiting
-        //   lobby: {
-        //     enabled: false
-        //   },
-          
-        //   // Auto-join settings
-        //   startAudioOnly: false,
-        //   startWithAudioMuted: true,
-        //   startWithVideoMuted: false,
-          
-        //   // Security settings for guest access but ensure host privileges
-        //   enableWelcomePage: false,
-        //   enableClosePage: false,
-        //   disableInviteFunctions: false,
-          
-        //   // Auto-grant moderator to first user
-        //   enableAutoLogin: true,
-        //   enableEmailInStats: false,
-          
-        //   // UI settings
-        //   toolbarButtons: [
-        //     'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting',
-        //     'fullscreen', 'fodeviceselection', 'hangup', 'profile', 'chat',
-        //     'raisehand', 'videoquality', 'filmstrip', 'tileview', 'settings'
-        //   ],
-          
-        //   // Connection settings
-        //   p2p: {
-        //     enabled: true,
-        //     stunServers: [
-        //       { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' }
-        //     ]
-        //   }
-        // },
-        // interfaceConfigOverwrite: {
-        //   // Critical: Disable authentication UI completely
-        //   SHOW_JITSI_WATERMARK: false,
-        //   SHOW_WATERMARK_FOR_GUESTS: false,
-        //   SHOW_BRAND_WATERMARK: false,
-        //   SHOW_POWERED_BY: false,
-        //   SHOW_PROMOTIONAL_CLOSE_PAGE: false,
-        //   SHOW_CHROME_EXTENSION_BANNER: false,
-        //   MOBILE_APP_PROMO: false,
-          
-        //   // Toolbar configuration
-        //   TOOLBAR_BUTTONS: [
-        //     'microphone', 'camera', 'closedcaptions', 'desktop',
-        //     'fullscreen', 'fodeviceselection', 'hangup', 'profile', 'chat',
-        //     'raisehand', 'videoquality', 'filmstrip', 'tileview', 'settings'
-        //   ],
-          
-        //   // CRITICAL: Authentication settings
-        //   AUTHENTICATION_ENABLED: false,
-        //   GUEST_ENABLED: true,
-          
-        //   // Auto-join settings
-        //   AUTO_PIN_LATEST_SCREEN_SHARE: true,
-        //   DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
-          
-        //   // Language and region
-        //   LANG_DETECTION: true,
-        //   DEFAULT_LANGUAGE: 'en',
-          
-        //   // Connection settings
-        //   CONNECTION_INDICATOR_DISABLED: false,
-        //   VIDEO_QUALITY_LABEL_DISABLED: false,
-          
-        //   // Browser compatibility
-        //   OPTIMAL_BROWSERS: ['chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari'],
-        //   UNSUPPORTED_BROWSERS: [],
-          
-        //   // Performance settings
-        //   DISABLE_PRESENCE_STATUS: false,
-        //   RECENT_LIST_ENABLED: false
-        // },
+          // Disable security warnings
+          enableInsecureRoomNameWarning: false,
+          enableWelcomePage: false
+        },
+        interfaceConfigOverwrite: {
+          // Minimal interface overrides
+          SHOW_JITSI_WATERMARK: false,
+          SHOW_WATERMARK_FOR_GUESTS: false,
+          SHOW_BRAND_WATERMARK: false,
+          DEFAULT_LANGUAGE: 'en'
+        },
         userInfo: {
           displayName: displayName || 'Guest User'
-          // No email field for guest access
-        },
-        // Add JWT token for moderator rights (optional but helps)
-        // jwt: null, // Let meet.jit.si handle guest access
-        
-        // Additional settings to ensure host privileges
-        onload: function() {
-          // This ensures the user gets host privileges when first joining
-          console.log('Jitsi Meet loaded - user should be host/moderator');
         }
       };
 
@@ -155,12 +77,15 @@ const VideoCall = ({ roomName, displayName, onCallEnd, isCallActive }) => {
 
   const initializeJitsi = (domain, options) => {
     try {
-      console.log('Initializing Jitsi with options:', options);
+      console.log('Initializing Jitsi with domain:', domain);
+      console.log('Room name:', options.roomName);
+      console.log('Full options:', options);
+      
       jitsiApi.current = new window.JitsiMeetExternalAPI(domain, options);
 
       // Event listeners
       jitsiApi.current.addEventListener('videoConferenceJoined', (event) => {
-        console.log('Video conference joined:', event);
+        console.log('Video conference joined successfully:', event);
         // Ensure display name is set and try to claim moderator role
         if (displayName) {
           jitsiApi.current.executeCommand('displayName', displayName);
@@ -174,11 +99,6 @@ const VideoCall = ({ roomName, displayName, onCallEnd, isCallActive }) => {
 
       jitsiApi.current.addEventListener('videoConferenceLeft', (event) => {
         console.log('Video conference left:', event);
-        onCallEnd();
-      });
-
-      jitsiApi.current.addEventListener('readyToClose', () => {
-        console.log('Ready to close');
         onCallEnd();
       });
 
@@ -205,17 +125,32 @@ const VideoCall = ({ roomName, displayName, onCallEnd, isCallActive }) => {
           console.log('Authentication required error - attempting to bypass');
           // Try to continue anyway as guest
           jitsiApi.current.executeCommand('displayName', displayName || 'Guest User');
+          // Try to force join
+          jitsiApi.current.executeCommand('toggleLobby', false);
         }
       });
 
-      // Handle authentication events
+      // Handle authentication events more aggressively
       jitsiApi.current.addEventListener('authenticationStatusChanged', (event) => {
         console.log('Authentication status changed:', event);
-        // Force continue as guest
-        if (event.authEnabled) {
-          console.log('Auth is enabled, but continuing as guest');
+        // Force continue as guest regardless of auth status
+        jitsiApi.current.executeCommand('displayName', displayName || 'Guest User');
+      });
+
+      // Add conference failed event handler
+      jitsiApi.current.addEventListener('conferenceFailedEvent', (event) => {
+        console.log('Conference failed:', event);
+        if (event.error === 'conference.authenticationRequired') {
+          console.log('Conference failed due to auth - attempting guest access');
+          // Try to rejoin or bypass
           jitsiApi.current.executeCommand('displayName', displayName || 'Guest User');
         }
+      });
+
+      // Handle ready to close with potential auth bypass
+      jitsiApi.current.addEventListener('readyToClose', () => {
+        console.log('Ready to close');
+        onCallEnd();
       });
 
     } catch (error) {
