@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChatWindow from './components/ChatWindow';
+import NotificationPanel from './components/NotificationPanel';
 import { useChatList } from './hooks/useChat';
+import { useNotifications } from './hooks/useNotifications';
 import { testFirebaseConnection } from './firebase/testConnection';
 import './ChatPage.css';
 
@@ -12,6 +14,12 @@ export const ChatPage = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [translationEnabled, setTranslationEnabled] = useState(false);
   const { chats, loading: chatsLoading } = useChatList(currentUser?.email);
+  const { 
+    notifications, 
+    unreadCount, 
+    markNotificationAsRead, 
+    markAllNotificationsAsRead 
+  } = useNotifications(currentUser?.email);
 
   // Check if user is logged in
   useEffect(() => {
@@ -99,6 +107,28 @@ export const ChatPage = () => {
     localStorage.setItem('translationEnabled', newState.toString());
   };
 
+  const handleNotificationClick = (notification) => {
+    // Find the user from the notification
+    const user = allUsers.find(u => u.email === notification.senderId);
+    if (user) {
+      setSelectedUser(user);
+    } else {
+      // If user not found in allUsers, create a temporary user object
+      setSelectedUser({
+        email: notification.senderId,
+        name: notification.senderName || notification.senderId.split('@')[0]
+      });
+    }
+  };
+
+  const handleMarkNotificationAsRead = (notificationId, chatId) => {
+    markNotificationAsRead(notificationId, chatId);
+  };
+
+  const handleMarkAllNotificationsAsRead = () => {
+    markAllNotificationsAsRead();
+  };
+
   if (!currentUser) {
     return <div>Loading...</div>;
   }
@@ -110,6 +140,13 @@ export const ChatPage = () => {
           <h2>Chat App</h2>
           <div className="user-info">
             <span>Welcome, {currentUser.name}</span>
+            <NotificationPanel
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onNotificationClick={handleNotificationClick}
+              onMarkAsRead={handleMarkNotificationAsRead}
+              onMarkAllAsRead={handleMarkAllNotificationsAsRead}
+            />
             <button 
               onClick={handleTranslationToggle}
               className={`translation-toggle-btn ${translationEnabled ? 'active' : ''}`}
