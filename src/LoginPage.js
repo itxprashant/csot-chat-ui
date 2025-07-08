@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -57,62 +58,53 @@ function LoginPage() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          background: 'linear-gradient(to right, red, blue)', 
-          padding: '20px', 
-          borderRadius: '10px' 
-        }}>
-          <h2 style={{ color: 'white', marginBottom: '20px' }}>Login</h2>
-          <form onSubmit={submitHandler}>
-            <label>
-              Email: 
-              <span style={{ marginRight: '10px' }} />
-              <input type="text" name="username" />
-            </label>
-            <br />
-            <label>
-              Password:
-              <span style={{ marginRight: '10px' }} />
-              <input type="password" name="password" />
-            </label>
-            <br/>
-            <br/>
-            <button style={{
-              backgroundColor: 'green',
-              color: 'white',
-              justifyContent: 'center',
-              alignContent: 'center',
-              fontSize: '20px',
-              padding: '10px 20px',
-            }}>
-              Submit
-            </button>
-          </form>
-
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <Link to="/register">
-              <button
-                style={{
-                  backgroundColor: 'blue',
-                  color: 'white',
-                  fontSize: '18px',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                Register
-              </button>
-            </Link>
-          </div>
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to continue to ChatUI</p>
         </div>
-      </header>
+        
+        <form className="login-form" onSubmit={submitHandler}>
+          <div className="form-group">
+            <label htmlFor="username">Email Address</label>
+            <input 
+              type="email" 
+              name="username" 
+              id="username"
+              className="form-input"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input 
+              type="password" 
+              name="password" 
+              id="password"
+              className="form-input"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          
+          <button type="submit" className="submit-button">
+            Sign In
+          </button>
+        </form>
+
+        <div className="divider">
+          <span>New to ChatUI?</span>
+        </div>
+
+        <div className="register-link">
+          <Link to="/register" className="register-button">
+            Create Account
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 // create a registration page with a form that has fields for username, email, and password
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './RegisterPage.css';
 
 export function RegisterPage() {
     function submitHandler(event) {
@@ -37,64 +38,65 @@ export function RegisterPage() {
 
     // Render the registration form
     return (
-        <div className="RegisterPage">
-            <header className="Register-header">
-                <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'center', 
-                    background: 'linear-gradient(to right, red, blue)', 
-                    padding: '20px', 
-                    borderRadius: '10px' 
-                }}>
-                    <h2 style={{ color: 'white', marginBottom: '20px' }}>Register</h2>
-                    <form onSubmit={submitHandler}>
-                        <label>
-                            Username:
-                            <span style={{ marginRight: '10px' }} />
-                            <input type="text" name="username" required />
-                        </label>
-                        <br />
-                        <label>
-                            Email:
-                            <span style={{ marginRight: '10px' }} />
-                            <input type="email" name="email" required />
-                        </label>
-                        <br />
-                        <label>
-                            Password:
-                            <span style={{ marginRight: '10px' }} />
-                            <input type="password" name="password" required />
-                        </label>
-                        <br />
-                        <br />
-                        <button type="submit" style={{
-                            backgroundColor: 'green',
-                            color: 'white',
-                            fontSize: '20px',
-                            padding: '10px 20px',
-                        }}>Register</button>
-                    </form>
-                    
-                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                        <Link to="/">
-                            <button
-                                style={{
-                                    backgroundColor: 'blue',
-                                    color: 'white',
-                                    fontSize: '18px',
-                                    padding: '10px 20px',
-                                    borderRadius: '5px',
-                                    border: 'none',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Back to Login
-                            </button>
-                        </Link>
-                    </div>
+        <div className="register-page">
+            <div className="register-container">
+                <div className="register-header">
+                    <h1>Join ChatUI</h1>
+                    <p>Create your account to start chatting</p>
                 </div>
-            </header>
+                
+                <form className="register-form" onSubmit={submitHandler}>
+                    <div className="form-group required">
+                        <label htmlFor="username">Username</label>
+                        <input 
+                            type="text" 
+                            name="username" 
+                            id="username"
+                            className="form-input"
+                            placeholder="Enter your username"
+                            required 
+                        />
+                    </div>
+                    
+                    <div className="form-group required">
+                        <label htmlFor="email">Email Address</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email"
+                            className="form-input"
+                            placeholder="Enter your email"
+                            required 
+                        />
+                    </div>
+                    
+                    <div className="form-group required">
+                        <label htmlFor="password">Password</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password"
+                            className="form-input"
+                            placeholder="Create a strong password"
+                            required 
+                        />
+                    </div>
+                    
+                    <button type="submit" className="submit-button">
+                        Create Account
+                    </button>
+                </form>
+
+                <div className="divider">
+                    <span>Already have an account?</span>
+                </div>
+
+                <div className="login-link">
+                    <Link to="/" className="login-button">
+                        Sign In
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 
