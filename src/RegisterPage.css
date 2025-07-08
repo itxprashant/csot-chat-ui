@@ -1,0 +1,291 @@
+/* Modern Register Page Styles */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 20px;
+}
+
+.register-container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #28a745, #007bff, #ffc107);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-header h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
+
+.register-header p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #28a745;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-input::placeholder {
+  color: #adb5bd;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+}
+
+.submit-button:hover::before {
+  left: 100%;
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e9ecef;
+}
+
+.divider::before {
+  margin-right: 1rem;
+}
+
+.divider::after {
+  margin-left: 1rem;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.875rem;
+  background: transparent;
+  color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.login-button:hover {
+  background-color: #007bff;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+/* Form validation styles */
+.form-group.required label::after {
+  content: ' *';
+  color: #dc3545;
+  font-weight: 700;
+}
+
+.form-input:required {
+  background-image: linear-gradient(45deg, transparent 40%, rgba(220, 53, 69, 0.1) 50%, transparent 60%);
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.form-input:required:valid {
+  background-image: linear-gradient(45deg, transparent 40%, rgba(40, 167, 69, 0.1) 50%, transparent 60%);
+  border-color: #28a745;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .register-page {
+    padding: 15px;
+  }
+  
+  .register-container {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .register-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .form-input,
+  .submit-button,
+  .login-button {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Loading state */
+.submit-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.submit-button:disabled::before {
+  display: none;
+}
+
+/* Success animation */
+@keyframes success-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.form-input.success {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.form-input.error {
+  border-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+/* Progress indicator for password strength */
+.password-strength {
+  height: 4px;
+  background: #e9ecef;
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  border-radius: 2px;
+}
+
+.password-strength-weak .password-strength-bar {
+  width: 33%;
+  background-color: #dc3545;
+}
+
+.password-strength-medium .password-strength-bar {
+  width: 66%;
+  background-color: #ffc107;
+}
+
+.password-strength-strong .password-strength-bar {
+  width: 100%;
+  background-color: #28a745;
+}
