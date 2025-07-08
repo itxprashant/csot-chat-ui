@@ -3,7 +3,10 @@ import { useChat } from '../hooks/useChat';
 import VideoCall from './VideoCall';
 import TranslationComponent from './TranslationComponent';
 import TranslationSettings from './TranslationSettings';
+import FileRenderer from './FileRenderer';
+import FileUpload from './FileUpload';
 import translationService from '../services/translationService';
+import CloudinaryService from '../services/cloudinaryService';
 import './ChatWindow.css';
 
 const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, targetUserName, translationEnabled = false }) => {
@@ -22,7 +25,6 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
   });
   const [messageTranslations, setMessageTranslations] = useState({});
   const messagesEndRef = useRef(null);
-  const fileInputRef = useRef(null);
   const chatWindowRef = useRef(null);
 
   // Auto-scroll to bottom when new messages arrive
@@ -72,47 +74,48 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
     setNewMessage('');
   };
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Check if file is an image
-      if (file.type.startsWith('image/')) {
-        handleSendPhoto(file);
-      } else {
-        alert('Please select an image file');
-      }
-    }
-  };
-
-  const handleSendPhoto = async (file) => {
+  const handleSendFile = async (file) => {
     if (!file) return;
 
     setIsUploading(true);
     try {
-      // Convert file to base64 for simple storage
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const base64Data = e.target.result;
-        const photoMessage = {
-          type: 'photo',
-          photoData: base64Data,
-          fileName: file.name,
-          fileSize: file.size
-        };
-        
-        await sendMessage(JSON.stringify(photoMessage), currentUserName, 'photo');
-        setIsUploading(false);
+      const result = await CloudinaryService.uploadFile(file);
+      
+      // Prepare file data for message
+      const fileData = {
+        url: result.url,
+        fileName: result.originalFilename || file.name,
+        fileType: CloudinaryService.getFileType(file.type),
+        fileSize: result.bytes || file.size,
+        format: result.format,
+        width: result.width,
+        height: result.height,
+        publicId: result.publicId,
+        resourceType: result.resourceType
       };
-      reader.readAsDataURL(file);
+
+      // Send file message
+      await sendMessage(JSON.stringify(fileData), currentUserName, 'file');
+      setIsUploading(false);
     } catch (error) {
-      console.error('Error sending photo:', error);
-      alert('Failed to send photo');
+      console.error('Error sending file:', error);
+      alert(`Failed to send file "${file.name}": ${error.message}`);
       setIsUploading(false);
     }
   };
 
-  const handleAttachmentClick = () => {
-    fileInputRef.current?.click();
+  const handleFileUploaded = async (fileData) => {
+    try {
+      // Send file message
+      await sendMessage(JSON.stringify(fileData), currentUserName, 'file');
+    } catch (error) {
+      console.error('Error sending file message:', error);
+      alert('Failed to send file message');
+    }
+  };
+
+  const handleUploadStart = (file) => {
+    setIsUploading(true);
   };
 
   // Drag and drop handlers
@@ -137,16 +140,21 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    const validFiles = files.filter(file => {
+      if (!CloudinaryService.isSupportedFileType(file)) {
+        alert(`File "${file.name}" is not supported or exceeds the 10MB limit.`);
+        return false;
+      }
+      return true;
+    });
 
-    if (imageFiles.length === 0) {
-      alert('Please drop only image files');
+    if (validFiles.length === 0) {
       return;
     }
 
-    // Handle multiple images
-    imageFiles.forEach(file => {
-      handleSendPhoto(file);
+    // Handle multiple files
+    validFiles.forEach(file => {
+      handleSendFile(file);
     });
   };
 
@@ -185,6 +193,7 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
     // Skip translation for non-text messages
     if (!message.message || 
         message.type === 'photo' || 
+        message.type === 'file' ||
         message.message.includes('📹 Video call invitation:') ||
         message.message.startsWith('{') || // Skip JSON messages
         typeof message.message !== 'string' ||
@@ -231,6 +240,7 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
     const isVideoCallInvitation = message.message.includes('📹 Video call invitation:');
     const translation = messageTranslations[message.id];
     const isTextMessage = message.type !== 'photo' && 
+                          message.type !== 'file' &&
                           !isVideoCallInvitation && 
                           message.message && 
                           typeof message.message === 'string' && 
@@ -255,7 +265,7 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
       );
     }
 
-    // Handle photo messages
+    // Handle photo messages (legacy support)
     if (message.type === 'photo') {
       try {
         const photoData = JSON.parse(message.message);
@@ -272,6 +282,17 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
         );
       } catch (error) {
         return <p>Error loading photo</p>;
+      }
+    }
+
+    // Handle file messages
+    if (message.type === 'file') {
+      try {
+        const fileData = JSON.parse(message.message);
+        return <FileRenderer fileData={fileData} />;
+      } catch (error) {
+        console.error('Error parsing file data:', error);
+        return <p>Error loading file</p>;
       }
     }
     
@@ -368,6 +389,7 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
                 {/* Add translation component for text messages only when translation is enabled */}
                 {translationEnabled && 
                  message.type !== 'photo' && 
+                 message.type !== 'file' &&
                  !message.message.includes('📹 Video call invitation:') && 
                  message.message && 
                  typeof message.message === 'string' && 
@@ -396,29 +418,22 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
           <button type="submit" className="send-button">
             Send
           </button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-          />
-          <button 
-            type="button" 
-            className="attachment-button"
-            onClick={handleAttachmentClick}
+          <FileUpload
+            onFileUploaded={handleFileUploaded}
+            onUploadStart={handleUploadStart}
             disabled={isUploading}
-          >
-            {isUploading ? 'Uploading...' : '📎 Attach Photo'}
-          </button>
+          />
         </form>
 
         {/* Drag and drop overlay */}
         {isDragOver && (
           <div className="drag-drop-overlay">
             <div className="drag-drop-content">
-              <div className="drag-drop-icon">📷</div>
-              <p>Drop images here to send</p>
+              <div className="drag-drop-icon">�</div>
+              <p>Drop files here to send</p>
+              <p className="drag-drop-details">
+                Supports images, videos, audio, documents, and more
+              </p>
             </div>
           </div>
         )}

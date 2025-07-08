@@ -1,0 +1,226 @@
+/* File Upload Component Styles */
+.file-upload-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Attach Button */
+.attach-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.attach-button:hover:not(.disabled):not(.uploading) {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.attach-button:active:not(.disabled):not(.uploading) {
+  transform: translateY(0);
+}
+
+.attach-button.disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.attach-button.uploading {
+  background-color: #17a2b8;
+  cursor: wait;
+}
+
+.upload-progress {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Upload Progress Bar */
+.upload-progress-bar {
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0 0 20px 20px;
+  overflow: hidden;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transition: width 0.3s ease;
+  border-radius: 0 0 20px 20px;
+}
+
+/* Drag and Drop Overlay */
+.drag-drop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 123, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(2px);
+}
+
+.drag-drop-content {
+  text-align: center;
+  padding: 3rem;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 3px dashed #007bff;
+  max-width: 400px;
+  margin: 2rem;
+}
+
+.drag-drop-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: #007bff;
+  animation: bounce 2s infinite;
+}
+
+.drag-drop-content p {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  color: #007bff;
+  font-weight: 600;
+}
+
+.drag-drop-details {
+  font-size: 0.9rem !important;
+  color: #6c757d !important;
+  font-weight: 400 !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.attach-button.uploading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Integration with message input */
+.message-input-form .file-upload-container {
+  margin-left: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .attach-button {
+    padding: 6px 10px;
+    min-width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .drag-drop-content {
+    padding: 2rem;
+    margin: 1rem;
+  }
+
+  .drag-drop-icon {
+    font-size: 3rem;
+  }
+
+  .drag-drop-content p {
+    font-size: 1rem;
+  }
+
+  .drag-drop-details {
+    font-size: 0.8rem !important;
+  }
+
+  .upload-progress {
+    font-size: 10px;
+  }
+}
+
+/* Error states */
+.attach-button.error {
+  background-color: #dc3545;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Success states */
+.attach-button.success {
+  background-color: #28a745;
+  animation: success-pulse 0.6s ease-in-out;
+}
+
+@keyframes success-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Focus states for accessibility */
+.attach-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.attach-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .attach-button {
+    border: 2px solid currentColor;
+  }
+  
+  .drag-drop-content {
+    border-width: 4px;
+  }
+}

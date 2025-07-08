@@ -257,13 +257,19 @@
 }
 
 .drag-drop-content p {
-  margin: 0;
+  margin: 0.5rem 0;
   font-size: 1.1rem;
   color: #007bff;
   font-weight: 500;
 }
 
-/* Photo message styles */
+.drag-drop-details {
+  font-size: 0.9rem !important;
+  color: #6c757d !important;
+  font-weight: 400 !important;
+}
+
+/* Legacy photo message styles (for backward compatibility) */
 .photo-message {
   max-width: 300px;
 }
@@ -287,27 +293,8 @@
   text-align: center;
 }
 
-/* Attachment button styles */
-.attachment-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  margin-left: 0.5rem;
-  transition: background-color 0.2s ease;
-}
-
-.attachment-button:hover:not(:disabled) {
-  background-color: #218838;
-}
-
-.attachment-button:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
+/* Remove old attachment button styles since we're using FileUpload component */
+/* Legacy styles removed - now using FileUpload component */
 
 /* Translation-related message styles */
 .message-text-content {

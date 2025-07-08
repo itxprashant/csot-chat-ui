@@ -33,7 +33,32 @@ export class ChatService {
       
       // Update last message in chat metadata
       const chatRef = doc(db, 'chats', chatId);
-      const lastMessageText = messageType === 'photo' ? '📷 Photo' : message;
+      let lastMessageText = message;
+      
+      // Set appropriate last message text based on message type
+      if (messageType === 'photo') {
+        lastMessageText = '📷 Photo';
+      } else if (messageType === 'file') {
+        try {
+          const fileData = JSON.parse(message);
+          const fileTypeEmoji = {
+            'image': '🖼️',
+            'video': '🎬',
+            'audio': '🎵',
+            'pdf': '📄',
+            'document': '📝',
+            'spreadsheet': '📊',
+            'presentation': '📊',
+            'text': '📃',
+            'archive': '🗜️'
+          };
+          const emoji = fileTypeEmoji[fileData.fileType] || '📎';
+          lastMessageText = `${emoji} ${fileData.fileName}`;
+        } catch (error) {
+          lastMessageText = '📎 File';
+        }
+      }
+      
       await updateDoc(chatRef, {
         lastMessage: lastMessageText,
         lastMessageTime: serverTimestamp(),

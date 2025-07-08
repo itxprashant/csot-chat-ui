@@ -20,7 +20,12 @@
 - **🎥 Video Calling** - High-quality video calls powered by Jitsi Meet
 - **🌐 Real-time Translation** - Multi-language support with Google Cloud Translate
 - **🔔 Smart Notifications** - Real-time notifications for new messages
-- **📁 File Sharing** - Upload and share files with drag-and-drop support
+- **📁 Advanced File Sharing** - Upload and share multiple file types with Cloudinary storage
+  - Images, videos, audio files
+  - Documents (PDF, Word, Excel, PowerPoint)
+  - Archives and text files
+  - Drag-and-drop upload with progress indicators
+  - File previews and inline rendering
 - **🎨 Modern UI** - Beautiful, intuitive interface with smooth animations
 
 ### 🛠️ Technical Features
@@ -80,9 +85,21 @@
    REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
    REACT_APP_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
    REACT_APP_FIREBASE_PROJECT_ID=your_firebase_project_id
+   
+   # Cloudinary Configuration (for file uploads)
+   REACT_APP_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   REACT_APP_CLOUDINARY_API_KEY=your_cloudinary_api_key
+   REACT_APP_CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   REACT_APP_CLOUDINARY_UPLOAD_PRESET=chat_files
    ```
 
-4. **Start the development server**
+4. **Set up Cloudinary for file uploads** (Optional but recommended)
+   - Create a free account at [cloudinary.com](https://cloudinary.com)
+   - Get your Cloud Name, API Key, and API Secret from the dashboard
+   - Create an unsigned upload preset named "chat_files"
+   - See [FILE_UPLOAD_SETUP.md](FILE_UPLOAD_SETUP.md) for detailed instructions
+
+5. **Start the development server**
    ```bash
    # Start backend server
    node src/backend/server.js
@@ -149,6 +166,7 @@
 - **Google Cloud Translate** - Translation services
 - **Jitsi Meet** - Video calling platform
 - **MongoDB Atlas** - Cloud database hosting
+- **Cloudinary** - File storage and optimization CDN
 
 ### Development Tools
 - **React Scripts** - Build and development tools
