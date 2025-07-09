@@ -442,6 +442,7 @@ const ChatWindow = ({ currentUserEmail, targetUserEmail, currentUserName, target
       <VideoCall
         roomName={callRoomName}
         displayName={currentUserName}
+        userEmail={currentUserEmail}
         onCallEnd={handleEndVideoCall}
         isCallActive={isVideoCallActive}
       />

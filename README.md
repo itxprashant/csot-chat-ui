@@ -17,7 +17,11 @@
 - **Responsive Design** - Works perfectly on desktop and mobile devices
 
 ### 🔥 Advanced Features
-- **🎥 Video Calling** - High-quality video calls powered by Jitsi Meet
+- **🎥 Video Calling** - High-quality video calls with JaaS (Jitsi as a Service) support
+  - Professional-grade video conferencing with JaaS
+  - Automatic fallback to free Jitsi Meet
+  - Custom branding and enhanced features with JaaS
+  - JWT-based authentication and security
 - **🌐 Real-time Translation** - Multi-language support with Google Cloud Translate
 - **🔔 Smart Notifications** - Real-time notifications for new messages
 - **📁 Advanced File Sharing** - Upload and share multiple file types with Cloudinary storage
@@ -219,6 +223,15 @@ Detailed setup instructions: [MONGODB_ATLAS_SETUP.md](MONGODB_ATLAS_SETUP.md)
 2. Enable Firestore Database
 3. Get your Firebase configuration
 4. Add the config to your `.env` file
+
+### JaaS (Jitsi as a Service) Setup
+For professional video conferencing with enhanced features:
+1. Sign up at [JaaS Console](https://jaas.8x8.vc/)
+2. Get your App ID, Private Key, and Key ID
+3. Configure backend environment variables
+4. Enjoy enhanced video calling features
+
+Detailed setup instructions: [JAAS_SETUP_GUIDE.md](JAAS_SETUP_GUIDE.md)
 
 ### Translation Service
 The app includes a mock translation service for development. For production:

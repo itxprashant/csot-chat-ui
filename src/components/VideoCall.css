@@ -20,9 +20,42 @@
   border-bottom: 1px solid #555;
 }
 
+.video-call-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .video-call-header h3 {
   margin: 0;
   font-size: 1.2rem;
+}
+
+.jaas-badge {
+  background-color: #007acc;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.free-jitsi-badge {
+  background-color: #28a745;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.free-jitsi-badge {
+  background-color: #28a745;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .end-call-btn {
@@ -37,6 +70,54 @@
 
 .end-call-btn:hover {
   background-color: #c82333;
+}
+
+.video-call-error {
+  background-color: #dc3545;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  border-bottom: 1px solid #555;
+}
+
+.video-call-error p {
+  margin: 0 0 10px 0;
+}
+
+.video-call-error button {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.video-call-loading {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #555;
+}
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #555;
+  border-top: 3px solid #007acc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .jitsi-container {
@@ -58,5 +139,14 @@
   .end-call-btn {
     padding: 6px 12px;
     font-size: 12px;
+  }
+
+  .jaas-badge {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+  }
+
+  .video-call-info {
+    gap: 8px;
   }
 }

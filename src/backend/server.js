@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const path = require('path');
+// Load environment variables from backend .env file
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 // import bcrypt from "bcryptjs";
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
@@ -8,8 +12,10 @@ const cors = require('cors');
 const { Chat } = require('./models/chat');
 const { ChatList } = require('./models/chatlist');
 const { User } = require('./models/user');
+const JaaSBackendService = require('./services/jaasBackendService');
 
 const saltRounds = 10;
+const jaasService = new JaaSBackendService();
 
 // Use environment variable for MongoDB connection or fallback to MongoDB Atlas
 const uri = "mongodb+srv://prashantt492:GuqFE9OgmZiwjO3S@cluster0.akh0s1t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -268,4 +274,56 @@ app.post('/api/users/status', (req, res) => {
             console.error('Error updating user status:', err);
             res.status(500).send('Error updating user status');
         });
-})
+});
+
+// Generate JaaS JWT token for video calls
+app.post('/api/jaas/token', (req, res) => {
+    const { roomName, displayName, userEmail, isModerator = true } = req.body;
+    
+    console.log('🎫 JaaS token request:', { roomName, displayName, userEmail, isModerator });
+
+    if (!roomName || !displayName) {
+        return res.status(400).json({ 
+            error: 'Room name and display name are required' 
+        });
+    }
+
+    try {
+        // Check if JaaS is configured
+        if (!jaasService.isConfigured()) {
+            console.log('⚠️  JaaS not configured, returning fallback response');
+            return res.status(200).json({ 
+                useJaaS: false,
+                message: 'JaaS not configured, fallback to free Jitsi Meet'
+            });
+        }
+
+        // Generate JWT token
+        const token = jaasService.generateToken(roomName, displayName, userEmail, isModerator);
+        
+        console.log('✅ JaaS token generated successfully');
+        res.status(200).json({ 
+            useJaaS: true,
+            token: token,
+            domain: process.env.JAAS_DOMAIN || `vpaas-magic-cookie-${process.env.JAAS_APP_ID}.8x8.vc`
+        });
+    } catch (error) {
+        console.error('❌ Error generating JaaS token:', error);
+        res.status(500).json({ 
+            error: 'Failed to generate JaaS token',
+            useJaaS: false
+        });
+    }
+});
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🔧 JaaS configured: ${jaasService.isConfigured()}`);
+    if (jaasService.isConfigured()) {
+        console.log(`🌐 JaaS domain: ${process.env.JAAS_DOMAIN}`);
+    } else {
+        console.log(`⚠️  JaaS not configured - will fallback to free Jitsi Meet`);
+    }
+});
