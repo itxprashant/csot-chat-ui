@@ -1,7 +1,7 @@
 // Test script to verify JaaS backend configuration
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, 'src', 'backend', '.env') });
-const JaaSBackendService = require('./src/backend/services/jaasBackendService');
+const JaaSBackendService = require('../src/backend/services/jaasBackendService');
 
 console.log('Testing JaaS Backend Configuration:');
 console.log('====================================');

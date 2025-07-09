@@ -1,7 +1,7 @@
 // Test JaaS token with specific room format
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, 'src', 'backend', '.env') });
-const JaaSBackendService = require('./src/backend/services/jaasBackendService');
+const JaaSBackendService = require('../src/backend/services/jaasBackendService');
 
 console.log('Testing JaaS Token with Room Format:');
 console.log('===================================');

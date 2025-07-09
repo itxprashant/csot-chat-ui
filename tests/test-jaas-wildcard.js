@@ -1,7 +1,7 @@
 // Test JaaS token with wildcard room
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, 'src', 'backend', '.env') });
-const JaaSBackendService = require('./src/backend/services/jaasBackendService');
+const JaaSBackendService = require('../src/backend/services/jaasBackendService');
 
 console.log('Testing JaaS Token with Wildcard Room:');
 console.log('=====================================');
