@@ -108,13 +108,6 @@ function changeName(email, newName) {
     });
 }
 
-// Only start the server if not in Vercel environment
-// if (process.env.NODE_ENV !== 'production') {
-//     const PORT = process.env.PORT || 8000;
-//     app.listen(PORT, () => {
-//         console.log(`Server is running on port ${PORT}`);
-//     });
-// }
 app.listen(8000, () => {
     console.log('Server is running on port 8000');
 });
@@ -217,23 +210,3 @@ app.get('/api/debug/db-status', async (req, res) => {
         res.status(500).json({ error: 'Error checking database status' });
     }
 });
-
-// test function to create a user
-// createUser("kyran", "kyran@gmail.com", "password");
-
-// test function to authenticate a user
-// authenticateUser("kyran@gmail.com", "password");
-
-
-// create a chat between two users
-// const newChat = new Chat({
-//     message: "Hello, how are you?",
-//     sender: "kyran@gmail.com",
-//     reciever: "john@gmail.com",
-//     date: new Date(),
-//     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute
-// : '2-digit' }),
-//     status: "sent",
-//     img_url: ""
-// });
-// newChat.save();
